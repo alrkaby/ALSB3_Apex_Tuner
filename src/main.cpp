@@ -9,11 +9,21 @@
 #include <SDL2/SDL.h>
 
 #ifdef __ORBIS__
+#include <orbis/Sysmodule.h>
 #include <orbis/libkernel.h>
 #endif
 
 int main(int argc, char* argv[]) {
     setvbuf(stdout, nullptr, _IONBF, 0);
+
+#ifdef __ORBIS__
+    sceSysmoduleLoadModule(ORBIS_SYSMODULE_FREETYPE_OL);
+    sceSysmoduleLoadModuleInternal(ORBIS_SYSMODULE_INTERNAL_USER_SERVICE);
+    sceSysmoduleLoadModuleInternal(ORBIS_SYSMODULE_INTERNAL_PAD);
+    sceSysmoduleLoadModuleInternal(ORBIS_SYSMODULE_INTERNAL_VIDEO_OUT);
+    sceSysmoduleLoadModuleInternal(ORBIS_SYSMODULE_INTERNAL_AUDIOOUT);
+    sceSysmoduleLoadModuleInternal(ORBIS_SYSMODULE_INTERNAL_NET);
+#endif
     LOGI("=================================================");
     LOGI("   %s v%s", APP_NAME, APP_VERSION);
     LOGI("   Developed by: %s", APP_DEVELOPER);

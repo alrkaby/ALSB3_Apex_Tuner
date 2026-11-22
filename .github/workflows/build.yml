@@ -77,12 +77,15 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v2.0.0
-          name: "ALSB3 Apex Tuner v2.0.0 (alsb3 dev)"
+          tag_name: v2.0.1
+          name: "ALSB3 Apex Tuner v2.0.1 (alsb3 dev)"
           body: |
-            ## ALSB3 Apex Tuner (Title ID: APEX00001)
+            ## ALSB3 Apex Tuner v2.0.1 (Title ID: APEX00001)
             **Developed by: alsb3 dev**
             
+            - Fixed system module initialization (corrupted data startup fix)
+            - Added official libc.prx, libSceFios2.prx, and right.sprx to package
+            - Custom 512x512 luxury ALSB3 Apex Tuner icon0.png
             - Intelligent Auto-Scan & Auto-Tuning Engine (L1+R1)
             - GOD MODE Performance Overdrive (R1+X)
             - Deep Network Stress Benchmark & MTU Zero-Fragmentation Lock

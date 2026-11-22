@@ -1,6 +1,8 @@
 #pragma once
 
 #include "common.h"
+#include "smart_diagnostics.h"
+#include "network_booster.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
@@ -22,7 +24,7 @@ public:
     void endFrame();
 
     void drawHeader(const SystemMetrics& metrics);
-    void drawDiagnosticBanner(const DiagnosticReport& report);
+    void drawDiagnosticBanner(const DiagnosticReport& report, const NetworkStressReport& netReport);
     void drawGameGrid(const std::vector<GameItem>& games, int selectedIndex, bool isGameModeActive, const std::string& activeTitleId);
     void drawFooter(const std::string& statusMessage);
 

@@ -130,15 +130,12 @@ void UiRenderer::drawHeader(const SystemMetrics& metrics) {
     fillRect(0, 0, 1920, 90, {18, 22, 30, 255});
     fillRect(0, 88, 1920, 2, {0, 240, 255, 255}); // Cyan Accent
 
-    // Branding: ALSB3 DEV
     drawText("ALSB3 APEX TUNER", 50, 18, 30, {0, 240, 255, 255});
-    drawText("BY ALSB3 DEV  |  PS4 GOD-TIER OPTIMIZER", 52, 55, 14, {255, 215, 0, 255}); // Apex Gold
+    drawText("BY ALSB3 DEV  |  PS4 GOD-TIER OPTIMIZER & NETWORK OVERDRIVE", 52, 55, 14, {255, 215, 0, 255});
 
-    // Right-side developer watermark
     drawText("DEVELOPER: ALSB3 DEV", 1620, 22, 16, {255, 215, 0, 255});
     drawText("VERSION: 02.00 GOD-TIER", 1620, 52, 14, {139, 148, 158, 255});
 
-    // Telemetry Box
     fillRect(700, 20, 200, 48, {28, 33, 44, 255});
     drawRect(700, 20, 200, 48, {48, 54, 61, 255}, 1);
     drawText("TEMP: " + std::to_string(metrics.socTempCelsius) + " C", 720, 32, 17, {0, 255, 157, 255});
@@ -155,33 +152,39 @@ void UiRenderer::drawHeader(const SystemMetrics& metrics) {
     }
 }
 
-void UiRenderer::drawDiagnosticBanner(const DiagnosticReport& report) {
-    // Smart Diagnostic & Auto-Tune Results Panel
-    fillRect(50, 110, 1820, 68, {22, 27, 36, 255});
-    drawRect(50, 110, 1820, 68, {0, 240, 255, 255}, 1);
-
-    std::string diagText = "[ALSB3 DEV AUTO-SCAN]  Hardware: " + (report.modelName.empty() ? "Detecting..." : report.modelName) +
-                           "  |  Optimal Fan: " + std::to_string(report.optimalFanThreshold) + "C" +
+void UiRenderer::drawDiagnosticBanner(const DiagnosticReport& report, const NetworkStressReport& netReport) {
+    // 1. Hardware Diagnostic Banner
+    fillRect(50, 105, 1820, 42, {22, 27, 36, 255});
+    drawRect(50, 105, 1820, 42, {0, 240, 255, 255}, 1);
+    std::string diagText = "[ALSB3 SYSTEM AUTO-SCAN]  Model: " + (report.modelName.empty() ? "PS4" : report.modelName) +
+                           "  |  Fan: " + std::to_string(report.optimalFanThreshold) + "C" +
                            "  |  DB Frag: " + std::to_string(report.dbFragmentationPercent) + "%" +
-                           "  |  Best Gaming DNS: " + (report.fastestDnsServer.empty() ? "1.1.1.1" : report.fastestDnsServer) +
-                           " (" + std::to_string(report.lowestPingMs) + "ms)";
-    drawText(diagText, 70, 125, 16, {201, 209, 217, 255});
+                           "  |  Profile: " + (report.recommendedProfile.empty() ? "Overdrive" : report.recommendedProfile);
+    drawText(diagText, 70, 117, 15, {201, 209, 217, 255});
 
-    std::string profileText = "Active Auto-Profile: " + (report.recommendedProfile.empty() ? "ALSB3 Ultimate Overdrive" : report.recommendedProfile);
-    drawText(profileText, 70, 148, 14, {255, 215, 0, 255});
+    // 2. Deep Network Stress Benchmark Banner
+    fillRect(50, 155, 1820, 42, {20, 35, 30, 255}); // Emerald dark
+    drawRect(50, 155, 1820, 42, {0, 255, 157, 255}, 1); // Emerald accent
+    std::string netText = "[ALSB3 NETWORK BENCHMARK]  Interface: " + (netReport.interfaceName.empty() ? "eth0" : netReport.interfaceName) +
+                          "  |  Ping: " + std::to_string(netReport.lowestLatencyMs) + "ms" +
+                          "  |  Jitter: " + std::to_string(netReport.lowestJitterMs) + "ms" +
+                          "  |  Zero-Frag MTU: " + std::to_string(netReport.optimalMtu) +
+                          "  |  DNS: " + (netReport.primaryDns.empty() ? "1.1.1.1" : netReport.primaryDns) +
+                          "  |  QoS Priority: " + (netReport.alsb3QosStatus.empty() ? "Active" : netReport.alsb3QosStatus);
+    drawText(netText, 70, 167, 15, {0, 255, 157, 255});
 }
 
 void UiRenderer::drawGameGrid(const std::vector<GameItem>& games, int selectedIndex, bool isGameModeActive, const std::string& activeTitleId) {
-    drawText("INSTALLED LIBRARY (SELECT A GAME TO FOCUS IN ALSB3 APEX MODE)", 50, 195, 20, {240, 246, 252, 255});
+    drawText("INSTALLED LIBRARY (SELECT A GAME TO FOCUS IN ALSB3 APEX MODE)", 50, 215, 19, {240, 246, 252, 255});
 
     if (games.empty()) {
-        fillRect(50, 230, 1820, 200, {22, 27, 34, 255});
-        drawText("Scanning /system_data/priv/mms/app.db for games...", 80, 300, 22, {139, 148, 158, 255});
+        fillRect(50, 245, 1820, 200, {22, 27, 34, 255});
+        drawText("Scanning /system_data/priv/mms/app.db for games...", 80, 310, 22, {139, 148, 158, 255});
         return;
     }
 
-    const int startY = 230;
-    const int itemHeight = 105;
+    const int startY = 245;
+    const int itemHeight = 100;
     const int maxVisible = 6;
     int scrollOffset = std::max(0, selectedIndex - (maxVisible - 1));
 
@@ -204,14 +207,14 @@ void UiRenderer::drawGameGrid(const std::vector<GameItem>& games, int selectedIn
             drawRect(50, y, 1820, itemHeight, {45, 52, 64, 255}, 1);
         }
 
-        drawImage(game.iconPath, 65, y + 8, 90, 90);
-        drawText(game.name, 175, y + 20, 24, isSelected ? ColorRGBA{255, 255, 255, 255} : ColorRGBA{201, 209, 217, 255});
-        drawText("TITLE ID: " + game.titleId + "  |  OPTIMIZED BY ALSB3 DEV", 175, y + 58, 15, {139, 148, 158, 255});
+        drawImage(game.iconPath, 65, y + 6, 88, 88);
+        drawText(game.name, 175, y + 18, 23, isSelected ? ColorRGBA{255, 255, 255, 255} : ColorRGBA{201, 209, 217, 255});
+        drawText("TITLE ID: " + game.titleId + "  |  OPTIMIZED BY ALSB3 DEV", 175, y + 54, 15, {139, 148, 158, 255});
 
         if (isFocused) {
-            fillRect(1560, y + 30, 280, 42, {255, 215, 0, 40});
-            drawRect(1560, y + 30, 280, 42, {255, 215, 0, 255}, 1);
-            drawText("ALSB3 APEX FOCUS ACTIVE", 1585, y + 42, 16, {255, 215, 0, 255});
+            fillRect(1560, y + 28, 280, 42, {255, 215, 0, 40});
+            drawRect(1560, y + 28, 280, 42, {255, 215, 0, 255}, 1);
+            drawText("ALSB3 APEX FOCUS ACTIVE", 1585, y + 40, 16, {255, 215, 0, 255});
         }
     }
 }
@@ -220,10 +223,8 @@ void UiRenderer::drawFooter(const std::string& statusMessage) {
     fillRect(0, 995, 1920, 85, {18, 22, 30, 255});
     fillRect(0, 995, 1920, 2, {48, 54, 61, 255});
 
-    // alsb3 dev signature and status
-    drawText("alsb3 dev  >>  " + statusMessage, 50, 1025, 18, {0, 240, 255, 255});
+    drawText("alsb3 dev  >>  " + statusMessage, 50, 1025, 17, {0, 240, 255, 255});
 
-    // Control Legends
-    std::string controls = "[L1+R1] Auto-Scan & Auto-Tune  |  [R1+X] GOD MODE  |  [X] Apex Focus  |  [SQUARE] Defrag DB";
-    drawText(controls, 780, 1025, 16, {255, 215, 0, 255});
+    std::string controls = "[DPAD-RIGHT] Deep Net Stress Test  |  [L1+R1] Full Auto-Tune  |  [R1+X] GOD MODE";
+    drawText(controls, 880, 1025, 16, {255, 215, 0, 255});
 }

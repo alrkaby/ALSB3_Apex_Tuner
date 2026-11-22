@@ -22,9 +22,9 @@ public:
     void endFrame();
 
     void drawHeader(const SystemMetrics& metrics);
+    void drawDiagnosticBanner(const DiagnosticReport& report);
     void drawGameGrid(const std::vector<GameItem>& games, int selectedIndex, bool isGameModeActive, const std::string& activeTitleId);
     void drawFooter(const std::string& statusMessage);
-    void drawNotificationToast(const std::string& toast);
 
     void fillRect(int x, int y, int w, int h, ColorRGBA color);
     void drawRect(int x, int y, int w, int h, ColorRGBA color, int thickness = 2);

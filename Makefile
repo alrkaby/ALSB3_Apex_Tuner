@@ -1,8 +1,9 @@
-# OrbisApex OpenOrbis Makefile
-TITLE       := OrbisApex
-VERSION     := 01.00
+# ALSB3 Apex Tuner OpenOrbis Makefile
+# Developed by: alsb3 dev
+TITLE       := ALSB3 Apex Tuner (alsb3 dev)
+VERSION     := 02.00
 TITLE_ID    := APEX00001
-CONTENT_ID  := IV0000-APEX00001_00-ORBISAPEX0000000
+CONTENT_ID  := IV0000-APEX00001_00-ALSB3APEX0000000
 
 # Linked libraries
 LIBS        := -lc -lkernel -lc++ -lSceUserService -lSceVideoOut -lSceAudioOut -lScePad -lSceSysmodule -lSceNet -lSceNetCtl -lSceHttp -lSceSsl -lSceFreeType -lSDL2 -lSDL2_image
@@ -32,11 +33,11 @@ CDIR        := linux
 
 PKGTOOL     := env DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 $(TOOLCHAIN)/bin/$(CDIR)/PkgTool.Core
 
-all: OrbisApex.pkg
+all: ALSB3_Apex_Tuner.pkg
 
-OrbisApex.pkg: pkg.gp4
+ALSB3_Apex_Tuner.pkg: pkg.gp4
 	$(PKGTOOL) pkg_build $< .
-	@if [ -f "$(CONTENT_ID).pkg" ]; then mv "$(CONTENT_ID).pkg" OrbisApex.pkg; fi
+	@if [ -f "$(CONTENT_ID).pkg" ]; then mv "$(CONTENT_ID).pkg" ALSB3_Apex_Tuner.pkg; fi
 
 pkg.gp4: eboot.bin sce_sys/param.sfo
 	$(TOOLCHAIN)/bin/$(CDIR)/create-gp4 -out $@ --content-id=$(CONTENT_ID) --files "$^"
@@ -56,8 +57,8 @@ sce_sys/param.sfo: Makefile
 	$(PKGTOOL) sfo_setentry $@ VERSION --type Utf8 --maxsize 8 --value '$(VERSION)'
 
 eboot.bin: $(OBJS)
-	$(LD) $(OBJS) -o $(INTDIR)/OrbisApex.elf $(LDFLAGS)
-	$(TOOLCHAIN)/bin/$(CDIR)/create-fself -in=$(INTDIR)/OrbisApex.elf -out=$(INTDIR)/OrbisApex.oelf --eboot "eboot.bin" --paid 0x3800000000000011
+	$(LD) $(OBJS) -o $(INTDIR)/ALSB3_Apex.elf $(LDFLAGS)
+	$(TOOLCHAIN)/bin/$(CDIR)/create-fself -in=$(INTDIR)/ALSB3_Apex.elf -out=$(INTDIR)/ALSB3_Apex.oelf --eboot "eboot.bin" --paid 0x3800000000000011
 
 $(INTDIR)/%.o: $(PROJDIR)/%.cpp
 	mkdir -p $(INTDIR)
@@ -72,4 +73,4 @@ $(INTDIR)/SDL_ttf.o: $(SDL_TTF_SRC)
 	$(CC) $(SDL_TTFFLAGS) -o $@ $<
 
 clean:
-	rm -rf build OrbisApex.pkg $(CONTENT_ID).pkg pkg.gp4 eboot.bin sce_sys/param.sfo
+	rm -rf build ALSB3_Apex_Tuner.pkg $(CONTENT_ID).pkg pkg.gp4 eboot.bin sce_sys/param.sfo

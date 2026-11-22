@@ -16,34 +16,30 @@ bool UiRenderer::init(int width, int height) {
 
     IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
 
-    window = SDL_CreateWindow("OrbisApex", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
-    if (!window) {
-        LOGE("Failed to create SDL window: %s", SDL_GetError());
-        return false;
-    }
+    window = SDL_CreateWindow("ALSB3 Apex Tuner", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+    if (!window) return false;
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!renderer) {
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
     }
 
-    // Try loading bundled font
     const char* fontPaths[] = {
         "/app0/assets/fonts/font.ttf",
-        "/data/OrbisApex/font.ttf",
+        "/data/ALSB3_Apex/font.ttf",
         "assets/fonts/font.ttf"
     };
 
     for (const char* p : fontPaths) {
-        fontTitle = TTF_OpenFont(p, 32);
+        fontTitle = TTF_OpenFont(p, 30);
         if (fontTitle) {
-            fontRegular = TTF_OpenFont(p, 22);
-            fontSmall = TTF_OpenFont(p, 16);
+            fontRegular = TTF_OpenFont(p, 20);
+            fontSmall = TTF_OpenFont(p, 15);
             break;
         }
     }
 
-    LOGI("UI Renderer initialized successfully");
+    LOGI("ALSB3 DEV UI Renderer successfully loaded");
     return true;
 }
 
@@ -66,7 +62,7 @@ void UiRenderer::shutdown() {
 }
 
 void UiRenderer::beginFrame() {
-    SDL_SetRenderDrawColor(renderer, 13, 17, 23, 255); // Dark Slate
+    SDL_SetRenderDrawColor(renderer, 10, 13, 18, 255); // Premium Obsidian
     SDL_RenderClear(renderer);
 }
 
@@ -90,8 +86,8 @@ void UiRenderer::drawRect(int x, int y, int w, int h, ColorRGBA color, int thick
 
 void UiRenderer::drawText(const std::string& text, int x, int y, int fontSize, ColorRGBA color) {
     TTF_Font* f = fontRegular;
-    if (fontSize >= 28) f = fontTitle;
-    else if (fontSize <= 18) f = fontSmall;
+    if (fontSize >= 26) f = fontTitle;
+    else if (fontSize <= 16) f = fontSmall;
 
     if (!f || text.empty()) return;
 
@@ -109,9 +105,7 @@ void UiRenderer::drawText(const std::string& text, int x, int y, int fontSize, C
 }
 
 SDL_Texture* UiRenderer::loadTexture(const std::string& path) {
-    if (textureCache.find(path) != textureCache.end()) {
-        return textureCache[path];
-    }
+    if (textureCache.find(path) != textureCache.end()) return textureCache[path];
     SDL_Surface* surf = IMG_Load(path.c_str());
     if (!surf) return nullptr;
 
@@ -127,56 +121,67 @@ void UiRenderer::drawImage(const std::string& imagePath, int x, int y, int w, in
         SDL_Rect dst{x, y, w, h};
         SDL_RenderCopy(renderer, tex, nullptr, &dst);
     } else {
-        // Fallback placeholder box
-        fillRect(x, y, w, h, {33, 38, 45, 255});
-        drawRect(x, y, w, h, {48, 54, 61, 255}, 1);
+        fillRect(x, y, w, h, {26, 31, 38, 255});
+        drawRect(x, y, w, h, {45, 52, 64, 255}, 1);
     }
 }
 
 void UiRenderer::drawHeader(const SystemMetrics& metrics) {
-    // Top banner
-    fillRect(0, 0, 1920, 95, {22, 27, 34, 255});
-    fillRect(0, 93, 1920, 3, {0, 240, 255, 255}); // Neon Cyan accent line
+    fillRect(0, 0, 1920, 90, {18, 22, 30, 255});
+    fillRect(0, 88, 1920, 2, {0, 240, 255, 255}); // Cyan Accent
 
-    drawText("ORBIS APEX", 50, 22, 34, {0, 240, 255, 255});
-    drawText("APEX GAMING MODE & SYSTEM TUNER", 52, 60, 16, {139, 148, 158, 255});
+    // Branding: ALSB3 DEV
+    drawText("ALSB3 APEX TUNER", 50, 18, 30, {0, 240, 255, 255});
+    drawText("BY ALSB3 DEV  |  PS4 GOD-TIER OPTIMIZER", 52, 55, 14, {255, 215, 0, 255}); // Apex Gold
 
-    // Metrics Badges
-    // 1. SOC Temp
-    fillRect(800, 25, 200, 48, {30, 36, 46, 255});
-    drawRect(800, 25, 200, 48, {48, 54, 61, 255}, 1);
-    drawText("TEMP: " + std::to_string(metrics.socTempCelsius) + " C", 820, 38, 18, {0, 255, 157, 255});
+    // Right-side developer watermark
+    drawText("DEVELOPER: ALSB3 DEV", 1620, 22, 16, {255, 215, 0, 255});
+    drawText("VERSION: 02.00 GOD-TIER", 1620, 52, 14, {139, 148, 158, 255});
 
-    // 2. Free RAM
+    // Telemetry Box
+    fillRect(700, 20, 200, 48, {28, 33, 44, 255});
+    drawRect(700, 20, 200, 48, {48, 54, 61, 255}, 1);
+    drawText("TEMP: " + std::to_string(metrics.socTempCelsius) + " C", 720, 32, 17, {0, 255, 157, 255});
+
     uint64_t ramMb = metrics.freeRamBytes / (1024 * 1024);
-    fillRect(1020, 25, 240, 48, {30, 36, 46, 255});
-    drawRect(1020, 25, 240, 48, {48, 54, 61, 255}, 1);
-    drawText("FREE RAM: " + std::to_string(ramMb) + " MB", 1040, 38, 18, {0, 240, 255, 255});
+    fillRect(915, 20, 220, 48, {28, 33, 44, 255});
+    drawRect(915, 20, 220, 48, {48, 54, 61, 255}, 1);
+    drawText("RAM: " + std::to_string(ramMb) + " MB FREE", 930, 32, 17, {0, 240, 255, 255});
 
-    // 3. Game Mode Badge
     if (metrics.gameModeActive) {
-        fillRect(1280, 25, 590, 48, {40, 30, 15, 255});
-        drawRect(1280, 25, 590, 48, {255, 215, 0, 255}, 2);
-        drawText("APEX MODE: " + metrics.activeFocusedGame + " (HOURLY TRIM ACTIVE)", 1300, 38, 18, {255, 215, 0, 255});
-    } else {
-        fillRect(1280, 25, 590, 48, {30, 36, 46, 255});
-        drawRect(1280, 25, 590, 48, {48, 54, 61, 255}, 1);
-        drawText("APEX MODE: STANDBY (SELECT GAME BELOW)", 1300, 38, 18, {139, 148, 158, 255});
+        fillRect(1150, 20, 440, 48, {45, 35, 10, 255});
+        drawRect(1150, 20, 440, 48, {255, 215, 0, 255}, 2);
+        drawText("ALSB3 GUARD: " + metrics.activeFocusedGame, 1165, 32, 17, {255, 215, 0, 255});
     }
 }
 
+void UiRenderer::drawDiagnosticBanner(const DiagnosticReport& report) {
+    // Smart Diagnostic & Auto-Tune Results Panel
+    fillRect(50, 110, 1820, 68, {22, 27, 36, 255});
+    drawRect(50, 110, 1820, 68, {0, 240, 255, 255}, 1);
+
+    std::string diagText = "[ALSB3 DEV AUTO-SCAN]  Hardware: " + (report.modelName.empty() ? "Detecting..." : report.modelName) +
+                           "  |  Optimal Fan: " + std::to_string(report.optimalFanThreshold) + "C" +
+                           "  |  DB Frag: " + std::to_string(report.dbFragmentationPercent) + "%" +
+                           "  |  Best Gaming DNS: " + (report.fastestDnsServer.empty() ? "1.1.1.1" : report.fastestDnsServer) +
+                           " (" + std::to_string(report.lowestPingMs) + "ms)";
+    drawText(diagText, 70, 125, 16, {201, 209, 217, 255});
+
+    std::string profileText = "Active Auto-Profile: " + (report.recommendedProfile.empty() ? "ALSB3 Ultimate Overdrive" : report.recommendedProfile);
+    drawText(profileText, 70, 148, 14, {255, 215, 0, 255});
+}
+
 void UiRenderer::drawGameGrid(const std::vector<GameItem>& games, int selectedIndex, bool isGameModeActive, const std::string& activeTitleId) {
-    drawText("INSTALLED LIBRARY (SELECT A GAME TO FOCUS IN APEX MODE)", 50, 125, 22, {240, 246, 252, 255});
+    drawText("INSTALLED LIBRARY (SELECT A GAME TO FOCUS IN ALSB3 APEX MODE)", 50, 195, 20, {240, 246, 252, 255});
 
     if (games.empty()) {
-        fillRect(50, 180, 1820, 300, {22, 27, 34, 255});
-        drawText("No installed games found in /system_data/priv/mms/app.db", 80, 240, 24, {139, 148, 158, 255});
+        fillRect(50, 230, 1820, 200, {22, 27, 34, 255});
+        drawText("Scanning /system_data/priv/mms/app.db for games...", 80, 300, 22, {139, 148, 158, 255});
         return;
     }
 
-    // Display visible rows (e.g., 6 items visible per page)
-    const int startY = 175;
-    const int itemHeight = 110;
+    const int startY = 230;
+    const int itemHeight = 105;
     const int maxVisible = 6;
     int scrollOffset = std::max(0, selectedIndex - (maxVisible - 1));
 
@@ -186,43 +191,39 @@ void UiRenderer::drawGameGrid(const std::vector<GameItem>& games, int selectedIn
         bool isSelected = (idx == selectedIndex);
         bool isFocused = (isGameModeActive && game.titleId == activeTitleId);
 
-        int y = startY + i * (itemHeight + 12);
+        int y = startY + i * (itemHeight + 10);
 
-        ColorRGBA bg = isSelected ? ColorRGBA{30, 45, 65, 255} : ColorRGBA{22, 27, 34, 255};
+        ColorRGBA bg = isSelected ? ColorRGBA{32, 44, 62, 255} : ColorRGBA{20, 24, 32, 255};
         fillRect(50, y, 1820, itemHeight, bg);
 
         if (isFocused) {
-            drawRect(50, y, 1820, itemHeight, {255, 215, 0, 255}, 3); // Gold border
+            drawRect(50, y, 1820, itemHeight, {255, 215, 0, 255}, 3);
         } else if (isSelected) {
-            drawRect(50, y, 1820, itemHeight, {0, 240, 255, 255}, 2); // Cyan border
+            drawRect(50, y, 1820, itemHeight, {0, 240, 255, 255}, 2);
         } else {
-            drawRect(50, y, 1820, itemHeight, {48, 54, 61, 255}, 1);
+            drawRect(50, y, 1820, itemHeight, {45, 52, 64, 255}, 1);
         }
 
-        // Game Icon
-        drawImage(game.iconPath, 65, y + 10, 90, 90);
+        drawImage(game.iconPath, 65, y + 8, 90, 90);
+        drawText(game.name, 175, y + 20, 24, isSelected ? ColorRGBA{255, 255, 255, 255} : ColorRGBA{201, 209, 217, 255});
+        drawText("TITLE ID: " + game.titleId + "  |  OPTIMIZED BY ALSB3 DEV", 175, y + 58, 15, {139, 148, 158, 255});
 
-        // Title and Title ID
-        drawText(game.name, 175, y + 22, 26, isSelected ? ColorRGBA{255, 255, 255, 255} : ColorRGBA{201, 209, 217, 255});
-        drawText("TITLE ID: " + game.titleId, 175, y + 62, 17, {139, 148, 158, 255});
-
-        // Focus Badge
         if (isFocused) {
-            fillRect(1580, y + 32, 260, 45, {255, 215, 0, 40});
-            drawRect(1580, y + 32, 260, 45, {255, 215, 0, 255}, 1);
-            drawText("ACTIVE APEX FOCUS", 1605, y + 44, 18, {255, 215, 0, 255});
+            fillRect(1560, y + 30, 280, 42, {255, 215, 0, 40});
+            drawRect(1560, y + 30, 280, 42, {255, 215, 0, 255}, 1);
+            drawText("ALSB3 APEX FOCUS ACTIVE", 1585, y + 42, 16, {255, 215, 0, 255});
         }
     }
 }
 
 void UiRenderer::drawFooter(const std::string& statusMessage) {
-    fillRect(0, 995, 1920, 85, {22, 27, 34, 255});
+    fillRect(0, 995, 1920, 85, {18, 22, 30, 255});
     fillRect(0, 995, 1920, 2, {48, 54, 61, 255});
 
-    // Status / Message
-    drawText(statusMessage, 50, 1025, 20, {0, 240, 255, 255});
+    // alsb3 dev signature and status
+    drawText("alsb3 dev  >>  " + statusMessage, 50, 1025, 18, {0, 240, 255, 255});
 
     // Control Legends
-    std::string controls = "[X] Engage Apex Mode   [SQUARE] Defrag Database   [TRIANGLE] Clean Junk   [OPTIONS] Thermal 62C";
-    drawText(controls, 880, 1025, 17, {139, 148, 158, 255});
+    std::string controls = "[L1+R1] Auto-Scan & Auto-Tune  |  [R1+X] GOD MODE  |  [X] Apex Focus  |  [SQUARE] Defrag DB";
+    drawText(controls, 780, 1025, 16, {255, 215, 0, 255});
 }

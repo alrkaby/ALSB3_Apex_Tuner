@@ -1,58 +1,54 @@
-# OrbisApex (Title ID: APEX00001)
+# ALSB3 Apex Tuner (Title ID: APEX00001)
 
-### Ultimate PS4 Apex Gaming Mode & System Tuner for Jailbroken Consoles (GoldHEN)
+### The Ultimate Intelligent PS4 Performance & Optimization Suite
+**Engineered & Developed by: alsb3 dev**
 
-OrbisApex is a high-performance native PlayStation 4 Homebrew application engineered in modern C++17 and OpenOrbis Toolchain. It transforms your PS4 into a fine-tuned gaming station with a focused **Game Mode**, scheduled memory optimization, and full-system debloating.
-
----
-
-## Key Features
-
-1. **Apex Turbo Game Mode**:
-   - Automatically scans and indexes all installed games from `/system_data/priv/mms/app.db`.
-   - Allows selecting any game (e.g. *eFootball PES 2020*, *Bloodborne*, *God of War*) to engage **Apex Focus**.
-   - Performs a complete pre-launch memory purge (dropping standby OS caches and killing non-essential background buffers).
-   - Launches the game directly into the foreground.
-
-2. **Hourly Background RAM Guard (Anti-Stutter & Anti-Lag Engine)**:
-   - Spawns a background watchdog timer.
-   - Every **1 hour (60 minutes)**, automatically cleans and reclaims standby memory and dirty file system pages.
-   - **Crucial Invariant**: Explicitly protects and exempts the active game's Title ID and execution memory, ensuring your gameplay never stutters, crashes, or drops frames.
-
-3. **Database Acceleration (SQLite VACUUM & REINDEX)**:
-   - Safely backs up `app.db` to `app.db.apex_bak`.
-   - Executes `VACUUM;` and `REINDEX;` on `app.db` and `notification.db`.
-   - Eliminates database B-Tree fragmentation, making the PS4 Home Screen (XMB) load instantly with zero icon lag.
-
-4. **Deep Junk & Cache Purge**:
-   - Deep cleans orphaned package chunks in `/data/pkg/`.
-   - Cleans corrupted or cancelled downloads in `/user/download/`.
-   - Purges accumulated core dumps and error logs in `/system_data/priv/log/` and `/user/home/*/error_log/`.
-
-5. **Thermal Guard & Anti-Throttling**:
-   - Adjusts fan speed threshold to 62°C (instead of Sony's default 79°C).
-   - Keeps the Jaguar CPU and GCN GPU cool, completely preventing thermal throttling during extended gaming sessions.
-
-6. **Luxury 60 FPS UI**:
-   - Dark Obsidian aesthetic with Neon Cyan and Apex Gold accents.
-   - Real-time hardware telemetry: SOC temperature, free RAM, free storage, and live Apex Focus status.
+ALSB3 Apex Tuner is a legendary, next-generation native PlayStation 4 Homebrew application engineered in modern C++17 and OpenOrbis Toolchain by **alsb3 dev**. It introduces an automated **Smart Diagnostic & Auto-Tune Engine** that scans your console hardware, benchmarks your storage and network, and automatically applies the optimal profile for peak gaming performance.
 
 ---
 
-## DualShock 4 Controller Controls
+## 🌟 Key Features
+
+1. **Intelligent Auto-Scan & Auto-Tuning Engine (`L1 + R1`)**:
+   - **Hardware Detection**: Automatically detects whether your console is a PS4 FAT (CUH-1xxx), Slim (CUH-2xxx), or Pro (CUH-7xxx).
+   - **Storage Fragmentation Benchmark**: Inspects `app.db` B-Tree page health and determines if defragmentation is required.
+   - **Network Ping Probe**: Tests multiple gaming DNS backbones (Cloudflare, Google, Quad9) and automatically selects the fastest DNS with lowest ping.
+   - **Automatic Profile Deployment**: Applies the ideal fan thermal threshold, network MTU, TCP parameters, and boost mode tailored to your specific hardware.
+
+2. **The "GOD MODE" Engine (`R1 + X`)**:
+   - Single-button full-system overdrive:
+     - SQLite `app.db` VACUUM & REINDEX.
+     - Deep junk and crash dump purge.
+     - Low-latency gaming DNS and zero-fragmentation MTU (1500).
+     - GPU/CPU clock overdrive and 60 FPS patch injection.
+     - Engages the 1-hour intelligent RAM watchdog and launches your selected game.
+
+3. **Hourly Intelligent RAM Watchdog (Anti-Stutter & Anti-Lag Engine)**:
+   - Runs a precision background watchdog thread.
+   - Every **60 minutes**, purges standby file system caches and compacts kernel memory.
+   - **Crucial Protection**: Strictly exempts the running game process memory, guaranteeing zero frame drops, zero stutter, and zero crashes.
+
+4. **Luxury 60 FPS UI by alsb3 dev**:
+   - Dark Obsidian with Neon Cyan & Apex Gold accents.
+   - Live hardware telemetry: APU/SOC temperature, free RAM, free storage, and diagnostic badges.
+   - Developer signatures and watermark: **alsb3 dev**.
+
+---
+
+## 🎮 DualShock 4 Controller Controls
 
 | Button | Function |
 |---|---|
-| **D-Pad Up / Down** | Browse installed game library |
-| **Cross (X)** | Engage **Apex Game Mode** (Purge RAM & Launch with Hourly Guard) |
+| **`L1 + R1`** | **🧠 ALSB3 Smart Auto-Scan & Auto-Tune (Examines & Applies Optimal Settings)** |
+| **`R1 + X`** | **🔥 GOD MODE (Complete System Defrag + 60FPS + Overdrive + Game Launch)** |
+| **`X`** | Engage **Apex Game Focus** on selected game (Standby RAM Purge + Hourly Guard) |
 | **Square** | Defragment & Optimize System Database (`app.db` VACUUM) |
 | **Triangle** | Deep Purge (Crash Dumps, Cache & Orphaned Downloads) |
-| **Options** | Toggle Thermal Guard (Set Fan Threshold to 62°C) |
-| **Circle (O)** | Refresh Game Library |
+| **Options** | Apply Model-Specific Thermal Guard (Active Fan Cooling) |
+| **Circle (O)** | Refresh Installed Game Library |
 
 ---
 
-## Cloud Build & Packaging (`OrbisApex.pkg`)
-
-This repository is pre-configured with a GitHub Actions workflow in `.github/workflows/build.yml`.
-Simply push this repository to GitHub, and GitHub Actions will automatically compile the ELF and produce `OrbisApex.pkg` in GitHub Artifacts.
+## 👑 Credits & Author
+- **Lead Developer**: **alsb3 dev**
+- **Architecture**: C++17, OpenOrbis Toolchain, SDL2 Hardware-Accelerated Rendering.

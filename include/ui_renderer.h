@@ -7,6 +7,21 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include <unordered_map>
+#include <vector>
+#include <string>
+
+enum ActionButtonType {
+    ACTION_BTN_GOD_MODE = 0,
+    ACTION_BTN_NET_BOOST,
+    ACTION_BTN_CLEAN_VACUUM,
+    ACTION_BTN_THERMAL_GUARD,
+    ACTION_BTN_COUNT
+};
+
+enum NavFocusArea {
+    FOCUS_ACTIONS = 0,
+    FOCUS_GAMES = 1
+};
 
 struct ColorRGBA {
     Uint8 r, g, b, a;
@@ -25,8 +40,9 @@ public:
 
     void drawHeader(const SystemMetrics& metrics);
     void drawDiagnosticBanner(const DiagnosticReport& report, const NetworkStressReport& netReport);
-    void drawGameGrid(const std::vector<GameItem>& games, int selectedIndex, bool isGameModeActive, const std::string& activeTitleId);
-    void drawFooter(const std::string& statusMessage);
+    void drawActionButtons(int selectedButtonIndex, bool isFocusOnButtons);
+    void drawGameGrid(const std::vector<GameItem>& games, int selectedIndex, bool isGameModeActive, const std::string& activeTitleId, bool isFocusOnGames);
+    void drawFooter(const std::string& statusMessage, NavFocusArea currentFocus);
 
     void fillRect(int x, int y, int w, int h, ColorRGBA color);
     void drawRect(int x, int y, int w, int h, ColorRGBA color, int thickness = 2);

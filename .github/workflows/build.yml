@@ -77,19 +77,18 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v2.0.1
-          name: "ALSB3 Apex Tuner v2.0.1 (alsb3 dev)"
+          tag_name: v2.0.2
+          name: "ALSB3 Apex Tuner v2.0.2 (alsb3 dev) - Legend Edition"
           body: |
-            ## ALSB3 Apex Tuner v2.0.1 (Title ID: APEX00001)
+            ## ALSB3 Apex Tuner v2.0.2 - Legend Edition (Title ID: APEX00001)
             **Developed by: alsb3 dev**
             
-            - Fixed system module initialization (corrupted data startup fix)
-            - Added official libc.prx, libSceFios2.prx, and right.sprx to package
-            - Custom 512x512 luxury ALSB3 Apex Tuner icon0.png
-            - Intelligent Auto-Scan & Auto-Tuning Engine (L1+R1)
-            - GOD MODE Performance Overdrive (R1+X)
-            - Deep Network Stress Benchmark & MTU Zero-Fragmentation Lock
-            - 1-Hour Intelligent RAM Guard with Game Exemption
+            ### What's New in v2.0.2:
+            - **Interactive On-Screen Action Cards**: Replaced obscure text shortcuts with 4 large, interactive action buttons (GOD MODE, NET STRESS & BOOST, CLEAN & VACUUM, THERMAL GUARD).
+            - **Resilient Multi-Source Game Scanner**: Broad SQLite table indexing (tbl_appinfo, tbl_appbrowse_*) + comprehensive filesystem fallback scanning across internal and external USB storage (`/user/appmeta`, `/mnt/ext0/user/appmeta`, `/user/app`).
+            - **Seamless D-Pad DualShock 4 Navigation**: Smoothly switch between top Action Cards row and installed game library cards.
+            - **Non-blocking Rescan**: Press [O] (Circle) to re-index games anytime.
+            - **Fixed Corrupted Data & Module Loaders**: Retained complete internal Orbis service loaders and PRX dependencies.
           files: |
             *.pkg
             eboot.bin

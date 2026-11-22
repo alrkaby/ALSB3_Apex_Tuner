@@ -1,4 +1,4 @@
-name: Build OrbisApex (PS4 PKG)
+name: Build ALSB3 Apex Tuner (PS4 PKG)
 
 on:
   push:
@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -56,15 +59,34 @@ jobs:
           sed -i 's/int TTF_GlyphIsProvided(const TTF_Font \*font/int TTF_GlyphIsProvided(TTF_Font *font/' \
             third_party/SDL_ttf/SDL_ttf.c
 
-      - name: Compile and Package OrbisApex
+      - name: Compile and Package ALSB3 Apex Tuner
         run: |
           make clean
           make
+          ls -la
 
-      - name: Upload OrbisApex.pkg Artifact
+      - name: Upload ALSB3_Apex_Tuner Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: OrbisApex-PS4
+          name: ALSB3-Apex-Tuner-PS4
           path: |
-            OrbisApex.pkg
+            *.pkg
+            eboot.bin
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        with:
+          tag_name: v2.0.0
+          name: "ALSB3 Apex Tuner v2.0.0 (alsb3 dev)"
+          body: |
+            ## ALSB3 Apex Tuner (Title ID: APEX00001)
+            **Developed by: alsb3 dev**
+            
+            - Intelligent Auto-Scan & Auto-Tuning Engine (L1+R1)
+            - GOD MODE Performance Overdrive (R1+X)
+            - Deep Network Stress Benchmark & MTU Zero-Fragmentation Lock
+            - 1-Hour Intelligent RAM Guard with Game Exemption
+          files: |
+            *.pkg
             eboot.bin

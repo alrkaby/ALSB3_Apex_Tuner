@@ -39,7 +39,7 @@ ALSB3_Apex_Tuner.pkg: pkg.gp4
 	$(PKGTOOL) pkg_build $< .
 	@if [ -f "$(CONTENT_ID).pkg" ]; then mv "$(CONTENT_ID).pkg" ALSB3_Apex_Tuner.pkg; fi
 
-pkg.gp4: eboot.bin sce_sys/param.sfo
+pkg.gp4: eboot.bin sce_sys/param.sfo sce_sys/icon0.png
 	$(TOOLCHAIN)/bin/$(CDIR)/create-gp4 -out $@ --content-id=$(CONTENT_ID) --files "$^"
 
 sce_sys/param.sfo: Makefile
